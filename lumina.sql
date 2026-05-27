@@ -1,4 +1,4 @@
-CREATE DATABASE Lumina;
+CREATE DATABASE IF NOT EXISTS Lumina;
 
 USE Lumina;
 
@@ -61,14 +61,14 @@ CONSTRAINT fkClienteResponsavel
 );
 
 CREATE TABLE cliente_convenio (
+    id_cliente_convenio INT AUTO_INCREMENT PRIMARY KEY,
     fk_cliente INT NOT NULL,
     fk_convenio INT NOT NULL,
     numero_inscricao VARCHAR(45),
-    PRIMARY KEY (fk_cliente, fk_convenio),
-CONSTRAINT fkCliente
+CONSTRAINT fkClienteConvenio_Cliente
     FOREIGN KEY (fk_cliente)
     REFERENCES cliente(id_cliente),
-CONSTRAINT fkConvenio
+CONSTRAINT fkClienteConvenio_Convenio
     FOREIGN KEY (fk_convenio)
     REFERENCES convenio(id_convenio)
 );
@@ -108,6 +108,7 @@ CREATE TABLE consulta (
     data DATE NOT NULL,
     horario_inicio TIME NOT NULL,
     horario_fim TIME NOT NULL,
+    status VARCHAR(20),
 CONSTRAINT fkConsultaCliente
     FOREIGN KEY (fk_cliente)
     REFERENCES cliente(id_cliente),
@@ -115,3 +116,47 @@ CONSTRAINT fkConsultaUsuario
     FOREIGN KEY (fk_usuario)
     REFERENCES usuario(id_usuario)
 );
+
+CREATE TABLE especialidade (
+    id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL
+);
+
+CREATE TABLE procedimento (
+    id_procedimento INT AUTO_INCREMENT PRIMARY KEY,
+    fk_especialidade INT NOT NULL,
+    nome_procedimento VARCHAR(45) NOT NULL,
+    exige_dente TINYINT(1),
+    preco_base DECIMAL(10,2),
+CONSTRAINT fkProcedimentoEspecialidade
+    FOREIGN KEY (fk_especialidade)
+    REFERENCES especialidade(id_especialidade)
+);
+
+CREATE TABLE consulta_procedimento (
+    id_consulta_procedimento INT AUTO_INCREMENT PRIMARY KEY,
+    fk_consulta INT NOT NULL,
+    fk_procedimento INT NOT NULL,
+    numero_dente INT,
+    observacao VARCHAR(45),
+    status VARCHAR(20),
+    valor_aplicado DECIMAL(10,2),
+CONSTRAINT fkConsultaProcedimento_Consulta
+    FOREIGN KEY (fk_consulta)
+    REFERENCES consulta(id_consulta),
+CONSTRAINT fkConsultaProcedimento_Procedimento
+    FOREIGN KEY (fk_procedimento)
+    REFERENCES procedimento(id_procedimento)
+);
+
+INSERT INTO perfil (nome)
+VALUES ('caio');
+
+INSERT INTO usuario (nome, email, senha, fk_perfil, cpf)
+VALUES ('John Doe', 'john@doe.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1, '123456');
+
+SELECT * FROM perfil;
+SELECT * FROM cliente;
+
+INSERT INTO estado_civil (descricao)
+VALUES ('solteiro');
