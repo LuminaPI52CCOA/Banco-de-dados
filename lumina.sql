@@ -109,6 +109,8 @@ CREATE TABLE consulta (
     horario_inicio TIME NOT NULL,
     horario_fim TIME NOT NULL,
     status VARCHAR(20),
+    lembrete_enviado TINYINT(1) DEFAULT 0,
+    alexa_reminder_id VARCHAR(255),
 CONSTRAINT fkConsultaCliente
     FOREIGN KEY (fk_cliente)
     REFERENCES cliente(id_cliente),
@@ -116,6 +118,22 @@ CONSTRAINT fkConsultaUsuario
     FOREIGN KEY (fk_usuario)
     REFERENCES usuario(id_usuario)
 );
+
+CREATE TABLE usuario_alexa (
+    id_usuario_alexa INT AUTO_INCREMENT PRIMARY KEY,
+    fk_usuario INT NOT NULL,
+    alexa_user_id VARCHAR(255) NOT NULL UNIQUE,
+    api_endpoint VARCHAR(100) DEFAULT 'https://api.amazonalexa.com',
+    codigo_pareamento VARCHAR(6) NULL,
+    codigo_expiracao DATETIME NULL,
+    ativo TINYINT(1) DEFAULT 1,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+CONSTRAINT fkUsuarioAlexa_Usuario
+    FOREIGN KEY (fk_usuario)
+    REFERENCES usuario(id_usuario)
+);
+
 
 CREATE TABLE especialidade (
     id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
@@ -150,13 +168,10 @@ CONSTRAINT fkConsultaProcedimento_Procedimento
 );
 
 INSERT INTO perfil (nome)
-VALUES ('caio');
+VALUES ('Dentista');
 
 INSERT INTO usuario (nome, email, senha, fk_perfil, cpf)
 VALUES ('John Doe', 'john@doe.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1, '123456');
 
-SELECT * FROM perfil;
-SELECT * FROM cliente;
-
 INSERT INTO estado_civil (descricao)
-VALUES ('solteiro');
+VALUES ('Solteiro');
