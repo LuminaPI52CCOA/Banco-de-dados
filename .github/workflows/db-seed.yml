@@ -1,0 +1,65 @@
+name: "Database CD (Seed & DDL Update)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_host:
+        description: "IP da EC2 Database (MySQL)"
+        required: true
+        type: string
+      ssh_user:
+        description: "Usuario SSH da instancia"
+        required: true
+        default: "ubuntu"
+        type: string
+      bastion_host:
+        description: "IP do Bastion Host (opcional, para saltar em ambiente prod privado)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  seed:
+    name: "Executar lumina.sql na Instancia Database"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          cat << 'EOF' > ~/.ssh/config
+          Host *
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
+          EOF
+
+      - name: Transferir e Executar lumina.sql
+        env:
+          TARGET: ${{ inputs.target_host }}
+          USER: ${{ inputs.ssh_user }}
+          BASTION: ${{ inputs.bastion_host }}
+        run: |
+          SSH_OPTS="-o StrictHostKeyChecking=no -i ~/.ssh/id_rsa"
+          SCP_OPTS="-o StrictHostKeyChecking=no -i ~/.ssh/id_rsa"
+
+          if [ -n "$BASTION" ]; then
+            echo "Conectando atraves do Bastion Host ($BASTION)..."
+            SSH_OPTS="$SSH_OPTS -J ${USER}@${BASTION}"
+            SCP_OPTS="$SCP_OPTS -o ProxyJump=${USER}@${BASTION}"
+          fi
+
+          echo "Enviando lumina.sql para a instancia $TARGET..."
+          scp $SCP_OPTS lumina.sql ${USER}@${TARGET}:/tmp/lumina.sql
+
+          echo "Executando carga de dados no MySQL..."
+          ssh $SSH_OPTS ${USER}@${TARGET} << 'EOSSH'
+            sudo mysql -u root < /tmp/lumina.sql
+            echo "Verificando se o schema Lumina e as tabelas foram criados:"
+            sudo mysql -u root -e "SHOW TABLES FROM Lumina;"
+          EOSSH
+
+          echo "✅ Carga do banco concluída com sucesso!"
