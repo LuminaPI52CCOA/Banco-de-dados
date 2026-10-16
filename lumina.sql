@@ -253,11 +253,3 @@ INSERT INTO consulta_procedimento (id_consulta_procedimento, fk_consulta, fk_pro
 (1, 1, 1, NULL, 'Profilaxia periódica', 'CONCLUIDA', 150.00),
 (2, 2, 2, 16, 'Restauração dente molar superior', 'AGENDADA', 220.00),
 (3, 3, 4, NULL, 'Clareamento caseiro supervisionado', 'AGENDADA', 600.00);
-
--- 11. Usuários Alexa (PIN de teste e dispositivo já vinculado para testes rápidos)
--- PIN de teste válido por 7 dias para John Doe testar o comando: "vincular código 123456"
-INSERT INTO usuario_alexa (id_usuario_alexa, fk_usuario, alexa_user_id, api_endpoint, codigo_pareamento, codigo_expiracao, ativo) VALUES 
-(1, 1, 'pending-john-doe-pin', 'https://api.amazonalexa.com', '123456', DATE_ADD(NOW(), INTERVAL 7 DAY), 1),
--- Dra. Ana Souza já possui um dispositivo previamente vinculado para teste direto de perguntas
-(2, 2, 'amzn1.ask.account.TESTE_ANA_SOUZA', 'https://api.amazonalexa.com', NULL, NULL, 1);
-
