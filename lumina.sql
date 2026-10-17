@@ -167,6 +167,44 @@ CONSTRAINT fkConsultaProcedimento_Procedimento
     REFERENCES procedimento(id_procedimento)
 );
 
+CREATE TABLE IF NOT EXISTS tipo_midia (
+    id_tipo_midia INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255) NULL,
+    fk_usuario INT NULL, 
+    ativo TINYINT(1) DEFAULT 1,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fkTipoMidia_Usuario FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE IF NOT EXISTS cliente_midia (
+    id_cliente_midia INT AUTO_INCREMENT PRIMARY KEY,
+    fk_cliente INT NOT NULL,
+    fk_usuario INT NOT NULL, 
+    fk_tipo_midia INT NOT NULL,
+    fk_consulta INT NULL, 
+    chave_s3 VARCHAR(500) NOT NULL UNIQUE,
+    nome_original VARCHAR(255) NOT NULL,
+    extensao VARCHAR(20) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    tamanho_bytes BIGINT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    legenda VARCHAR(500) NULL,
+    ativo TINYINT(1) DEFAULT 1, 
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    data_exclusao DATETIME NULL,
+    fk_usuario_exclusao INT NULL,
+    CONSTRAINT fkClienteMidia_Cliente FOREIGN KEY (fk_cliente) REFERENCES cliente(id_cliente),
+    CONSTRAINT fkClienteMidia_Usuario FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fkClienteMidia_TipoMidia FOREIGN KEY (fk_tipo_midia) REFERENCES tipo_midia(id_tipo_midia),
+    CONSTRAINT fkClienteMidia_Consulta FOREIGN KEY (fk_consulta) REFERENCES consulta(id_consulta),
+    CONSTRAINT fkClienteMidia_UsuarioExclusao FOREIGN KEY (fk_usuario_exclusao) REFERENCES usuario(id_usuario)
+);
+
+CREATE INDEX idx_cliente_midia_busca ON cliente_midia (fk_cliente, ativo, fk_tipo_midia, criado_em);
+CREATE INDEX idx_tipo_midia_usuario ON tipo_midia (fk_usuario, ativo);
+
 -- =============================================================================
 -- MASSA DE DADOS DE TESTE (SEED DATA)
 -- =============================================================================
@@ -253,3 +291,14 @@ INSERT INTO consulta_procedimento (id_consulta_procedimento, fk_consulta, fk_pro
 (1, 1, 1, NULL, 'Profilaxia periódica', 'CONCLUIDA', 150.00),
 (2, 2, 2, 16, 'Restauração dente molar superior', 'AGENDADA', 220.00),
 (3, 3, 4, NULL, 'Clareamento caseiro supervisionado', 'AGENDADA', 600.00);
+
+-- 11. Carga Inicial de Tipos de Mídia Padrões (Seed Data)
+INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUES
+(1, 'Foto Intraoral', 'Fotografias internas da cavidade bucal e arcadas', NULL, 1),
+(2, 'Foto Extraoral', 'Fotografias de face, perfil e sorriso', NULL, 1),
+(3, 'Radiografia Panorâmica', 'Radiografias panorâmicas completas', NULL, 1),
+(4, 'Radiografia Periapical', 'Radiografias periapicais de dentes específicos', NULL, 1),
+(5, 'Tomografia / 3D', 'Tomografias volumétricas ou escaneamentos intraorais 3D', NULL, 1),
+(6, 'Documento / Laudo', 'Laudos periciais, termos de consentimento e exames em PDF', NULL, 1),
+(7, 'Evolução de Tratamento', 'Registros sequenciais de acompanhamento clínico', NULL, 1);
+

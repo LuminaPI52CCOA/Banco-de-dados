@@ -13,7 +13,7 @@ Este repositório armazena o modelo de dados relacional e os scripts de iniciali
 
 ## 🏛️ Estrutura das Tabelas
 
-O schema `Lumina` é composto por 12 tabelas relacionais organizadas em módulos:
+O schema `Lumina` é composto por 14 tabelas relacionais organizadas em módulos:
 
 ### 1. Gestão de Usuários e Acessos
 * **`perfil`**: Perfis de controle de acesso (Ex: `ADMIN`, `DENTISTA`, `RECEPCIONISTA`).
@@ -39,6 +39,11 @@ O schema `Lumina` é composto por 12 tabelas relacionais organizadas em módulos
   * `codigo_pareamento`: PIN temporário de 6 dígitos para pareamento em tela.
   * `expiracao_codigo`: Timestamp de validade do PIN (10 minutos).
   * `ativo`: Flag de conexão ativa do aparelho no consultório.
+
+### 5. Gestão de Fotos e Mídias Clínicas (S3 Storage)
+* **`tipo_midia`**: Categorias de mídias (padrões globais do sistema com `fk_usuario IS NULL` e tipos personalizados criados pelo dentista com `fk_usuario` preenchido).
+* **`cliente_midia`**: Metadados das fotos e documentos dos pacientes (chave S3 determinística, nome original, tipo MIME, tamanho em bytes, status `PENDING`/`ACTIVE`/`ERROR`, legenda e suporte a soft delete com `ativo = 0` e `data_exclusao`).
+
 
 ---
 
