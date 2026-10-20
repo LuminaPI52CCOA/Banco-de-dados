@@ -151,11 +151,18 @@ CONSTRAINT fkProcedimentoEspecialidade
     REFERENCES especialidade(id_especialidade)
 );
 
+CREATE TABLE dente (
+    numero_dente INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    arcada VARCHAR(15) NOT NULL,
+    quadrante TINYINT NOT NULL
+);
+
 CREATE TABLE consulta_procedimento (
     id_consulta_procedimento INT AUTO_INCREMENT PRIMARY KEY,
     fk_consulta INT NOT NULL,
     fk_procedimento INT NOT NULL,
-    numero_dente INT,
+    fk_dente INT NULL,
     observacao VARCHAR(45),
     status VARCHAR(20),
     valor_aplicado DECIMAL(10,2),
@@ -164,7 +171,10 @@ CONSTRAINT fkConsultaProcedimento_Consulta
     REFERENCES consulta(id_consulta),
 CONSTRAINT fkConsultaProcedimento_Procedimento
     FOREIGN KEY (fk_procedimento)
-    REFERENCES procedimento(id_procedimento)
+    REFERENCES procedimento(id_procedimento),
+CONSTRAINT fkConsultaProcedimento_Dente
+    FOREIGN KEY (fk_dente)
+    REFERENCES dente(numero_dente)
 );
 
 CREATE TABLE IF NOT EXISTS tipo_midia (
@@ -286,13 +296,52 @@ INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, data, horario_inicio,
 -- Consulta 6: John Doe - Consulta agendada para amanhã
 (6, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL);
 
--- 10. Procedimentos das Consultas
-INSERT INTO consulta_procedimento (id_consulta_procedimento, fk_consulta, fk_procedimento, numero_dente, observacao, status, valor_aplicado) VALUES 
+-- 10. Catálogo de Dentes (Padrão FDI - 32 Dentes Permanentes)
+INSERT INTO dente (numero_dente, nome, arcada, quadrante) VALUES
+-- Quadrante 1: Superior Direito
+(11, 'Incisivo Central Superior Direito', 'SUPERIOR', 1),
+(12, 'Incisivo Lateral Superior Direito', 'SUPERIOR', 1),
+(13, 'Canino Superior Direito', 'SUPERIOR', 1),
+(14, '1º Pré-Molar Superior Direito', 'SUPERIOR', 1),
+(15, '2º Pré-Molar Superior Direito', 'SUPERIOR', 1),
+(16, '1º Molar Superior Direito', 'SUPERIOR', 1),
+(17, '2º Molar Superior Direito', 'SUPERIOR', 1),
+(18, '3º Molar Superior Direito (Siso)', 'SUPERIOR', 1),
+-- Quadrante 2: Superior Esquerdo
+(21, 'Incisivo Central Superior Esquerdo', 'SUPERIOR', 2),
+(22, 'Incisivo Lateral Superior Esquerdo', 'SUPERIOR', 2),
+(23, 'Canino Superior Esquerdo', 'SUPERIOR', 2),
+(24, '1º Pré-Molar Superior Esquerdo', 'SUPERIOR', 2),
+(25, '2º Pré-Molar Superior Esquerdo', 'SUPERIOR', 2),
+(26, '1º Molar Superior Esquerdo', 'SUPERIOR', 2),
+(27, '2º Molar Superior Esquerdo', 'SUPERIOR', 2),
+(28, '3º Molar Superior Esquerdo (Siso)', 'SUPERIOR', 2),
+-- Quadrante 3: Inferior Esquerdo
+(31, 'Incisivo Central Inferior Esquerdo', 'INFERIOR', 3),
+(32, 'Incisivo Lateral Inferior Esquerdo', 'INFERIOR', 3),
+(33, 'Canino Inferior Esquerdo', 'INFERIOR', 3),
+(34, '1º Pré-Molar Inferior Esquerdo', 'INFERIOR', 3),
+(35, '2º Pré-Molar Inferior Esquerdo', 'INFERIOR', 3),
+(36, '1º Molar Inferior Esquerdo', 'INFERIOR', 3),
+(37, '2º Molar Inferior Esquerdo', 'INFERIOR', 3),
+(38, '3º Molar Inferior Esquerdo (Siso)', 'INFERIOR', 3),
+-- Quadrante 4: Inferior Direito
+(41, 'Incisivo Central Inferior Direito', 'INFERIOR', 4),
+(42, 'Incisivo Lateral Inferior Direito', 'INFERIOR', 4),
+(43, 'Canino Inferior Direito', 'INFERIOR', 4),
+(44, '1º Pré-Molar Inferior Direito', 'INFERIOR', 4),
+(45, '2º Pré-Molar Inferior Direito', 'INFERIOR', 4),
+(46, '1º Molar Inferior Direito', 'INFERIOR', 4),
+(47, '2º Molar Inferior Direito', 'INFERIOR', 4),
+(48, '3º Molar Inferior Direito (Siso)', 'INFERIOR', 4);
+
+-- 11. Procedimentos das Consultas
+INSERT INTO consulta_procedimento (id_consulta_procedimento, fk_consulta, fk_procedimento, fk_dente, observacao, status, valor_aplicado) VALUES 
 (1, 1, 1, NULL, 'Profilaxia periódica', 'CONCLUIDA', 150.00),
 (2, 2, 2, 16, 'Restauração dente molar superior', 'AGENDADA', 220.00),
 (3, 3, 4, NULL, 'Clareamento caseiro supervisionado', 'AGENDADA', 600.00);
 
--- 11. Carga Inicial de Tipos de Mídia Padrões (Seed Data)
+-- 12. Carga Inicial de Tipos de Mídia Padrões (Seed Data)
 INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUES
 (1, 'Foto Intraoral', 'Fotografias internas da cavidade bucal e arcadas', NULL, 1),
 (2, 'Foto Extraoral', 'Fotografias de face, perfil e sorriso', NULL, 1),

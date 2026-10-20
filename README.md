@@ -13,7 +13,7 @@ Este repositório armazena o modelo de dados relacional e os scripts de iniciali
 
 ## 🏛️ Estrutura das Tabelas
 
-O schema `Lumina` é composto por 14 tabelas relacionais organizadas em módulos:
+O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos:
 
 ### 1. Gestão de Usuários e Acessos
 * **`perfil`**: Perfis de controle de acesso (Ex: `ADMIN`, `DENTISTA`, `RECEPCIONISTA`).
@@ -28,9 +28,10 @@ O schema `Lumina` é composto por 14 tabelas relacionais organizadas em módulos
 
 ### 3. Consultas e Procedimentos
 * **`especialidade`**: Especialidades odontológicas (Ex: Ortodontia, Endodontia, Clínico Geral).
-* **`procedimento`**: Catálogo de procedimentos executados pela clínica com valores e tempo médio.
+* **`procedimento`**: Catálogo de procedimentos executados pela clínica com valores e indicação se exige dente (`exige_dente`).
+* **`dente`**: Tabela de domínio com os 32 dentes permanentes na numeração internacional FDI (`11` a `48`), incluindo nome anatômico, arcada (`SUPERIOR`/`INFERIOR`) e quadrante (`1` a `4`).
 * **`consulta`**: Agendamento de atendimentos com data, horário, status, paciente (`fk_cliente`) e dentista responsável (`fk_usuario`).
-* **`consulta_procedimento`**: Procedimentos vinculados a uma consulta específica.
+* **`consulta_procedimento`**: Procedimentos vinculados a uma consulta específica e, quando aplicável, ao dente tratado (`fk_dente`).
 
 ### 4. Integração de Voz (Alexa)
 * **`usuario_alexa`**: Gerencia a associação segura entre o dispositivo Amazon Echo e o dentista:
