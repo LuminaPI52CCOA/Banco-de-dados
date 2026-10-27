@@ -351,3 +351,71 @@ INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUE
 (6, 'Documento / Laudo', 'Laudos periciais, termos de consentimento e exames em PDF', NULL, 1),
 (7, 'Evolução de Tratamento', 'Registros sequenciais de acompanhamento clínico', NULL, 1);
 
+
+-- =============================================================================
+-- AGENDAMENTO DE CONSULTAS (tela "Novo Agendamento")
+-- Bancos já existentes devem executar migracoes/V2__agendamento_consultas.sql,
+-- que aplica estas mesmas alterações de forma incremental e idempotente.
+-- =============================================================================
+
+ALTER TABLE consulta
+    ADD COLUMN fk_especialidade INT NULL AFTER fk_usuario,
+    ADD COLUMN observacoes VARCHAR(500) NULL AFTER status,
+    ADD COLUMN tipo_dente VARCHAR(45) NULL AFTER observacoes,
+    ADD COLUMN pular_odontograma TINYINT(1) NOT NULL DEFAULT 0 AFTER tipo_dente,
+    ADD CONSTRAINT fkConsultaEspecialidade
+        FOREIGN KEY (fk_especialidade)
+        REFERENCES especialidade(id_especialidade);
+
+CREATE INDEX idx_consulta_dentista_data ON consulta (fk_usuario, data, horario_inicio);
+
+-- Seleção de dentes do odontograma (consulta_procedimento segue reservada para procedimentos)
+CREATE TABLE consulta_dente (
+    fk_consulta INT NOT NULL,
+    fk_dente INT NOT NULL,
+CONSTRAINT pkConsultaDente
+    PRIMARY KEY (fk_consulta, fk_dente),
+CONSTRAINT fkConsultaDente_Consulta
+    FOREIGN KEY (fk_consulta)
+    REFERENCES consulta(id_consulta),
+CONSTRAINT fkConsultaDente_Dente
+    FOREIGN KEY (fk_dente)
+    REFERENCES dente(numero_dente)
+);
+
+-- Lembretes D-1 via WhatsApp e confirmação pública (entidade NotificacaoWhatsapp do back-end)
+CREATE TABLE notificacao_whatsapp (
+    id_notificacao INT AUTO_INCREMENT PRIMARY KEY,
+    fk_consulta INT NOT NULL,
+    fk_cliente INT NOT NULL,
+    fk_destinatario INT NOT NULL,
+    nome_destinatario VARCHAR(100) NOT NULL,
+    grau_parentesco VARCHAR(30),
+    numero_telefone_higienizado VARCHAR(20),
+    status VARCHAR(30) NOT NULL DEFAULT 'PENDENTE',
+    motivo_falha VARCHAR(255),
+    data_consulta DATE NOT NULL,
+    horario_consulta TIME NOT NULL,
+    token_confirmacao VARCHAR(64) NOT NULL,
+    limite_confirmacao_em DATETIME NOT NULL,
+    confirmado_em DATETIME NULL,
+    criado_em DATETIME NOT NULL,
+    atualizado_em DATETIME NOT NULL,
+    disparado_em DATETIME NULL,
+    fk_usuario_disparo INT NULL,
+CONSTRAINT uk_notificacao_consulta UNIQUE (fk_consulta),
+CONSTRAINT uk_notificacao_token UNIQUE (token_confirmacao),
+CONSTRAINT fkNotificacao_Consulta FOREIGN KEY (fk_consulta) REFERENCES consulta(id_consulta),
+CONSTRAINT fkNotificacao_Cliente FOREIGN KEY (fk_cliente) REFERENCES cliente(id_cliente),
+CONSTRAINT fkNotificacao_Destinatario FOREIGN KEY (fk_destinatario) REFERENCES cliente(id_cliente),
+CONSTRAINT fkNotificacao_UsuarioDisparo FOREIGN KEY (fk_usuario_disparo) REFERENCES usuario(id_usuario)
+);
+
+CREATE INDEX idx_notificacao_data_status ON notificacao_whatsapp (data_consulta, status);
+
+-- Especialidade e dentes das consultas de exemplo
+UPDATE consulta SET fk_especialidade = 1 WHERE id_consulta IN (1, 2, 4, 5, 6);
+UPDATE consulta SET fk_especialidade = 3 WHERE id_consulta = 3;
+
+INSERT INTO consulta_dente (fk_consulta, fk_dente) VALUES
+(2, 16);

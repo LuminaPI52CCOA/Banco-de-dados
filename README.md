@@ -7,6 +7,7 @@ Este repositório armazena o modelo de dados relacional e os scripts de iniciali
 ## 📋 Conteúdo do Repositório
 
 * **`lumina.sql`**: Script completo em SQL contendo a criação do banco de dados `Lumina`, todas as tabelas com constraints de chave estrangeira (`FOREIGN KEY`) e inserts iniciais de massa de testes (seeds com usuários, clientes, convênios e consultas).
+* **`migracoes/V2__agendamento_consultas.sql`**: Migração incremental e idempotente para bancos já existentes (agendamento de consultas: `fk_especialidade`, `observacoes`, `tipo_dente`, `pular_odontograma` em `consulta`, tabela `consulta_dente` e `notificacao_whatsapp`). Execute com `mysql -u root -p < migracoes/V2__agendamento_consultas.sql`. Bancos novos criados pelo `lumina.sql` atual já contêm essas alterações.
 * **`lumina.mwb`**: Modelo visual do banco de dados para edição e visualização no **MySQL Workbench**.
 
 ---
@@ -31,6 +32,7 @@ O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos
 * **`procedimento`**: Catálogo de procedimentos executados pela clínica com valores e indicação se exige dente (`exige_dente`).
 * **`dente`**: Tabela de domínio com os 32 dentes permanentes na numeração internacional FDI (`11` a `48`), incluindo nome anatômico, arcada (`SUPERIOR`/`INFERIOR`) e quadrante (`1` a `4`).
 * **`consulta`**: Agendamento de atendimentos com data, horário, status, paciente (`fk_cliente`) e dentista responsável (`fk_usuario`).
+* **`consulta_dente`**: Seleção de dentes do odontograma feita no agendamento (PK composta `fk_consulta` + `fk_dente`, sem procedimento associado).
 * **`consulta_procedimento`**: Procedimentos vinculados a uma consulta específica e, quando aplicável, ao dente tratado (`fk_dente`).
 
 ### 4. Integração de Voz (Alexa)
