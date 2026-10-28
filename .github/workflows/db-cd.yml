@@ -1,0 +1,46 @@
+name: "Database CD (Push to ECR)"
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - "lumina.sql"
+      - "Dockerfile"
+  workflow_dispatch:
+    inputs:
+      aws_region:
+        description: "Região AWS"
+        required: false
+        default: "us-east-1"
+        type: string
+
+jobs:
+  deploy:
+    name: "Build Imagem MySQL e Push no ECR"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Repositorio
+        uses: actions/checkout@v4
+
+      - name: Autenticar na AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ inputs.aws_region || 'us-east-1' }}
+
+      - name: Autenticar no Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build da Imagem Docker
+        run: |
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/lumina-database:latest .
+
+      - name: Push para o ECR
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/lumina-database:latest
+
+      - name: Conclusão
+        run: echo "✅ Imagem do banco enviada ao ECR com sucesso!"
