@@ -7,14 +7,13 @@ Este repositório armazena o modelo de dados relacional e os scripts de iniciali
 ## 📋 Conteúdo do Repositório
 
 * **`lumina.sql`**: Script completo em SQL contendo a criação do banco de dados `Lumina`, todas as tabelas com constraints de chave estrangeira (`FOREIGN KEY`) e inserts iniciais de massa de testes (seeds com usuários, clientes, convênios e consultas).
-* **`migracoes/V2__agendamento_consultas.sql`**: Migração incremental e idempotente para bancos já existentes (agendamento de consultas: `fk_especialidade`, `observacoes`, `tipo_dente`, `pular_odontograma` em `consulta`, tabela `consulta_dente` e `notificacao_whatsapp`). Execute com `mysql -u root -p < migracoes/V2__agendamento_consultas.sql`. Bancos novos criados pelo `lumina.sql` atual já contêm essas alterações.
 * **`lumina.mwb`**: Modelo visual do banco de dados para edição e visualização no **MySQL Workbench**.
 
 ---
 
 ## 🏛️ Estrutura das Tabelas
 
-O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos:
+O schema `Lumina` é composto por 17 tabelas relacionais organizadas em módulos:
 
 ### 1. Gestão de Usuários e Acessos
 * **`perfil`**: Perfis de controle de acesso (Ex: `ADMIN`, `DENTISTA`, `RECEPCIONISTA`).
@@ -46,6 +45,9 @@ O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos
 ### 5. Gestão de Fotos e Mídias Clínicas (S3 Storage)
 * **`tipo_midia`**: Categorias de mídias (padrões globais do sistema com `fk_usuario IS NULL` e tipos personalizados criados pelo dentista com `fk_usuario` preenchido).
 * **`cliente_midia`**: Metadados das fotos e documentos dos pacientes (chave S3 determinística, nome original, tipo MIME, tamanho em bytes, status `PENDING`/`ACTIVE`/`ERROR`, legenda e suporte a soft delete com `ativo = 0` e `data_exclusao`).
+
+### 6. Comunicação e Notificações (WhatsApp)
+* **`notificacao_whatsapp`**: Controle de disparos de lembretes D-1 via WhatsApp e link com token de confirmação pública da consulta.
 
 
 ---
