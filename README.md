@@ -13,7 +13,7 @@ Este repositório armazena o modelo de dados relacional e os scripts de iniciali
 
 ## 🏛️ Estrutura das Tabelas
 
-O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos:
+O schema `Lumina` é composto por 17 tabelas relacionais organizadas em módulos:
 
 ### 1. Gestão de Usuários e Acessos
 * **`perfil`**: Perfis de controle de acesso (Ex: `ADMIN`, `DENTISTA`, `RECEPCIONISTA`).
@@ -31,6 +31,7 @@ O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos
 * **`procedimento`**: Catálogo de procedimentos executados pela clínica com valores e indicação se exige dente (`exige_dente`).
 * **`dente`**: Tabela de domínio com os 32 dentes permanentes na numeração internacional FDI (`11` a `48`), incluindo nome anatômico, arcada (`SUPERIOR`/`INFERIOR`) e quadrante (`1` a `4`).
 * **`consulta`**: Agendamento de atendimentos com data, horário, status, paciente (`fk_cliente`) e dentista responsável (`fk_usuario`).
+* **`consulta_dente`**: Seleção de dentes do odontograma feita no agendamento (PK composta `fk_consulta` + `fk_dente`, sem procedimento associado).
 * **`consulta_procedimento`**: Procedimentos vinculados a uma consulta específica e, quando aplicável, ao dente tratado (`fk_dente`).
 
 ### 4. Integração de Voz (Alexa)
@@ -44,6 +45,9 @@ O schema `Lumina` é composto por 15 tabelas relacionais organizadas em módulos
 ### 5. Gestão de Fotos e Mídias Clínicas (S3 Storage)
 * **`tipo_midia`**: Categorias de mídias (padrões globais do sistema com `fk_usuario IS NULL` e tipos personalizados criados pelo dentista com `fk_usuario` preenchido).
 * **`cliente_midia`**: Metadados das fotos e documentos dos pacientes (chave S3 determinística, nome original, tipo MIME, tamanho em bytes, status `PENDING`/`ACTIVE`/`ERROR`, legenda e suporte a soft delete com `ativo = 0` e `data_exclusao`).
+
+### 6. Comunicação e Notificações (WhatsApp)
+* **`notificacao_whatsapp`**: Controle de disparos de lembretes D-1 via WhatsApp e link com token de confirmação pública da consulta.
 
 
 ---

@@ -101,14 +101,23 @@ CONSTRAINT fkAnamneseCliente
     REFERENCES cliente(id_cliente)
 );
 
+CREATE TABLE especialidade (
+    id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL
+);
+
 CREATE TABLE consulta (
     id_consulta INT AUTO_INCREMENT PRIMARY KEY,
     fk_cliente INT NOT NULL,
     fk_usuario INT NOT NULL,
+    fk_especialidade INT NULL,
     data DATE NOT NULL,
     horario_inicio TIME NOT NULL,
     horario_fim TIME NOT NULL,
-    status VARCHAR(20),
+    status VARCHAR(20) DEFAULT 'AGENDADA',
+    observacoes VARCHAR(500) NULL,
+    tipo_dente VARCHAR(45) NULL,
+    pular_odontograma TINYINT(1) NOT NULL DEFAULT 0,
     lembrete_enviado TINYINT(1) DEFAULT 0,
     alexa_reminder_id VARCHAR(255),
 CONSTRAINT fkConsultaCliente
@@ -116,8 +125,13 @@ CONSTRAINT fkConsultaCliente
     REFERENCES cliente(id_cliente),
 CONSTRAINT fkConsultaUsuario
     FOREIGN KEY (fk_usuario)
-    REFERENCES usuario(id_usuario)
+    REFERENCES usuario(id_usuario),
+CONSTRAINT fkConsultaEspecialidade
+    FOREIGN KEY (fk_especialidade)
+    REFERENCES especialidade(id_especialidade)
 );
+
+CREATE INDEX idx_consulta_dentista_data ON consulta (fk_usuario, data, horario_inicio);
 
 CREATE TABLE usuario_alexa (
     id_usuario_alexa INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,12 +146,6 @@ CREATE TABLE usuario_alexa (
 CONSTRAINT fkUsuarioAlexa_Usuario
     FOREIGN KEY (fk_usuario)
     REFERENCES usuario(id_usuario)
-);
-
-
-CREATE TABLE especialidade (
-    id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE procedimento (
@@ -176,6 +184,48 @@ CONSTRAINT fkConsultaProcedimento_Dente
     FOREIGN KEY (fk_dente)
     REFERENCES dente(numero_dente)
 );
+
+CREATE TABLE consulta_dente (
+    fk_consulta INT NOT NULL,
+    fk_dente INT NOT NULL,
+CONSTRAINT pkConsultaDente
+    PRIMARY KEY (fk_consulta, fk_dente),
+CONSTRAINT fkConsultaDente_Consulta
+    FOREIGN KEY (fk_consulta)
+    REFERENCES consulta(id_consulta),
+CONSTRAINT fkConsultaDente_Dente
+    FOREIGN KEY (fk_dente)
+    REFERENCES dente(numero_dente)
+);
+
+CREATE TABLE notificacao_whatsapp (
+    id_notificacao INT AUTO_INCREMENT PRIMARY KEY,
+    fk_consulta INT NOT NULL,
+    fk_cliente INT NOT NULL,
+    fk_destinatario INT NOT NULL,
+    nome_destinatario VARCHAR(100) NOT NULL,
+    grau_parentesco VARCHAR(30),
+    numero_telefone_higienizado VARCHAR(20),
+    status VARCHAR(30) NOT NULL DEFAULT 'PENDENTE',
+    motivo_falha VARCHAR(255),
+    data_consulta DATE NOT NULL,
+    horario_consulta TIME NOT NULL,
+    token_confirmacao VARCHAR(64) NOT NULL,
+    limite_confirmacao_em DATETIME NOT NULL,
+    confirmado_em DATETIME NULL,
+    criado_em DATETIME NOT NULL,
+    atualizado_em DATETIME NOT NULL,
+    disparado_em DATETIME NULL,
+    fk_usuario_disparo INT NULL,
+CONSTRAINT uk_notificacao_consulta UNIQUE (fk_consulta),
+CONSTRAINT uk_notificacao_token UNIQUE (token_confirmacao),
+CONSTRAINT fkNotificacao_Consulta FOREIGN KEY (fk_consulta) REFERENCES consulta(id_consulta),
+CONSTRAINT fkNotificacao_Cliente FOREIGN KEY (fk_cliente) REFERENCES cliente(id_cliente),
+CONSTRAINT fkNotificacao_Destinatario FOREIGN KEY (fk_destinatario) REFERENCES cliente(id_cliente),
+CONSTRAINT fkNotificacao_UsuarioDisparo FOREIGN KEY (fk_usuario_disparo) REFERENCES usuario(id_usuario)
+);
+
+CREATE INDEX idx_notificacao_data_status ON notificacao_whatsapp (data_consulta, status);
 
 CREATE TABLE IF NOT EXISTS tipo_midia (
     id_tipo_midia INT AUTO_INCREMENT PRIMARY KEY,
@@ -282,19 +332,19 @@ INSERT INTO procedimento (id_procedimento, fk_especialidade, nome_procedimento, 
 (4, 1, 'Clareamento Dental', 0, 600.00);
 
 -- 9. Consultas (Utiliza CURRENT_DATE para que as consultas SEMPRE caiam na data de hoje ao rodar o script)
-INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, data, horario_inicio, horario_fim, status, lembrete_enviado, alexa_reminder_id) VALUES 
+INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, fk_especialidade, data, horario_inicio, horario_fim, status, lembrete_enviado, alexa_reminder_id) VALUES 
 -- Consulta 1: John Doe - Já realizada mais cedo hoje
-(1, 2, 1, CURRENT_DATE, '09:00:00', '09:45:00', 'CONCLUIDA', 1, 'reminder-concluido-01'),
+(1, 2, 1, 1, CURRENT_DATE, '09:00:00', '09:45:00', 'CONCLUIDA', 1, 'reminder-concluido-01'),
 -- Consulta 2: John Doe - PRÓXIMA CONSULTA DE HOJE (Paciente Carlos Silva com Alergia a Penicilina)
-(2, 1, 1, CURRENT_DATE, '14:30:00', '15:15:00', 'AGENDADA', 0, NULL),
+(2, 1, 1, 1, CURRENT_DATE, '14:30:00', '15:15:00', 'AGENDADA', 0, NULL),
 -- Consulta 3: John Doe - Atendimento da tarde
-(3, 3, 1, CURRENT_DATE, '16:00:00', '16:45:00', 'AGENDADA', 0, NULL),
+(3, 3, 1, 3, CURRENT_DATE, '16:00:00', '16:45:00', 'AGENDADA', 0, NULL),
 -- Consulta 4: John Doe - Último atendimento do dia
-(4, 4, 1, CURRENT_DATE, '17:30:00', '18:15:00', 'AGENDADA', 0, NULL),
+(4, 4, 1, 1, CURRENT_DATE, '17:30:00', '18:15:00', 'AGENDADA', 0, NULL),
 -- Consulta 5: Dra. Ana Maria Souza - Atendimento hoje
-(5, 3, 2, CURRENT_DATE, '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
+(5, 3, 2, 1, CURRENT_DATE, '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
 -- Consulta 6: John Doe - Consulta agendada para amanhã
-(6, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL);
+(6, 1, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL);
 
 -- 10. Catálogo de Dentes (Padrão FDI - 32 Dentes Permanentes)
 INSERT INTO dente (numero_dente, nome, arcada, quadrante) VALUES
@@ -341,7 +391,11 @@ INSERT INTO consulta_procedimento (id_consulta_procedimento, fk_consulta, fk_pro
 (2, 2, 2, 16, 'Restauração dente molar superior', 'AGENDADA', 220.00),
 (3, 3, 4, NULL, 'Clareamento caseiro supervisionado', 'AGENDADA', 600.00);
 
--- 12. Carga Inicial de Tipos de Mídia Padrões (Seed Data)
+-- 12. Dentes do Odontograma Vinculados às Consultas
+INSERT INTO consulta_dente (fk_consulta, fk_dente) VALUES
+(2, 16);
+
+-- 13. Carga Inicial de Tipos de Mídia Padrões (Seed Data)
 INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUES
 (1, 'Foto Intraoral', 'Fotografias internas da cavidade bucal e arcadas', NULL, 1),
 (2, 'Foto Extraoral', 'Fotografias de face, perfil e sorriso', NULL, 1),
@@ -350,4 +404,3 @@ INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUE
 (5, 'Tomografia / 3D', 'Tomografias volumétricas ou escaneamentos intraorais 3D', NULL, 1),
 (6, 'Documento / Laudo', 'Laudos periciais, termos de consentimento e exames em PDF', NULL, 1),
 (7, 'Evolução de Tratamento', 'Registros sequenciais de acompanhamento clínico', NULL, 1);
-
