@@ -198,34 +198,35 @@ CONSTRAINT fkConsultaDente_Dente
     REFERENCES dente(numero_dente)
 );
 
-CREATE TABLE notificacao_whatsapp (
-    id_notificacao INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS notificacao_whatsapp (
+    id_notificacao BIGINT AUTO_INCREMENT PRIMARY KEY,
     fk_consulta INT NOT NULL,
     fk_cliente INT NOT NULL,
     fk_destinatario INT NOT NULL,
     nome_destinatario VARCHAR(100) NOT NULL,
-    grau_parentesco VARCHAR(30),
-    numero_telefone_higienizado VARCHAR(20),
+    grau_parentesco VARCHAR(30) NULL,
+    numero_telefone_higienizado VARCHAR(20) NULL,
     status VARCHAR(30) NOT NULL DEFAULT 'PENDENTE',
-    motivo_falha VARCHAR(255),
+    motivo_falha VARCHAR(255) NULL,
     data_consulta DATE NOT NULL,
     horario_consulta TIME NOT NULL,
     token_confirmacao VARCHAR(64) NOT NULL,
     limite_confirmacao_em DATETIME NOT NULL,
     confirmado_em DATETIME NULL,
-    criado_em DATETIME NOT NULL,
-    atualizado_em DATETIME NOT NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     disparado_em DATETIME NULL,
     fk_usuario_disparo INT NULL,
-CONSTRAINT uk_notificacao_consulta UNIQUE (fk_consulta),
-CONSTRAINT uk_notificacao_token UNIQUE (token_confirmacao),
-CONSTRAINT fkNotificacao_Consulta FOREIGN KEY (fk_consulta) REFERENCES consulta(id_consulta),
-CONSTRAINT fkNotificacao_Cliente FOREIGN KEY (fk_cliente) REFERENCES cliente(id_cliente),
-CONSTRAINT fkNotificacao_Destinatario FOREIGN KEY (fk_destinatario) REFERENCES cliente(id_cliente),
-CONSTRAINT fkNotificacao_UsuarioDisparo FOREIGN KEY (fk_usuario_disparo) REFERENCES usuario(id_usuario)
+    CONSTRAINT uk_notificacao_consulta UNIQUE (fk_consulta),
+    CONSTRAINT uk_notificacao_token UNIQUE (token_confirmacao),
+    CONSTRAINT fkNotificacao_Consulta FOREIGN KEY (fk_consulta) REFERENCES consulta(id_consulta),
+    CONSTRAINT fkNotificacao_Cliente FOREIGN KEY (fk_cliente) REFERENCES cliente(id_cliente),
+    CONSTRAINT fkNotificacao_Destinatario FOREIGN KEY (fk_destinatario) REFERENCES cliente(id_cliente),
+    CONSTRAINT fkNotificacao_UsuarioDisparo FOREIGN KEY (fk_usuario_disparo) REFERENCES usuario(id_usuario)
 );
 
 CREATE INDEX idx_notificacao_data_status ON notificacao_whatsapp (data_consulta, status);
+CREATE INDEX idx_notificacao_token ON notificacao_whatsapp (token_confirmacao);
 
 CREATE TABLE IF NOT EXISTS tipo_midia (
     id_tipo_midia INT AUTO_INCREMENT PRIMARY KEY,
