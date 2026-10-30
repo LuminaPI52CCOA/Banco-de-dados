@@ -297,18 +297,24 @@ INSERT INTO convenio (id_convenio, nome) VALUES
 (4, 'SulAmérica Odonto');
 
 -- 5. Clientes / Pacientes
-INSERT INTO cliente (id_cliente, nome, cpf, rg, data_nascimento, numero_celular, email, sexo, naturalidade, nacionalidade, fk_estado_civil, endereco_residencial, cep, ativo) VALUES 
-(1, 'Carlos Silva', '12312312345', '123456789', '1990-05-15', '11987654321', 'carlos.silva@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua das Flores, 120', '01001000', 1),
-(2, 'Maria Oliveira', '23423423456', '234567890', '1985-08-20', '11912345678', 'maria.oliveira@email.com', 'F', 'Campinas', 'Brasileira', 2, 'Av. Paulista, 1500', '01310100', 1),
-(3, 'Lucas Santos', '34534534567', '345678901', '2000-11-10', '11998877665', 'lucas.santos@email.com', 'M', 'Santos', 'Brasileira', 1, 'Rua Augusta, 450', '01305000', 1),
-(4, 'Juliana Costa', '45645645678', '456789012', '1995-03-25', '11977665544', 'juliana.costa@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Alameda Santos, 800', '01419001', 1);
+INSERT INTO cliente (id_cliente, nome, cpf, rg, data_nascimento, numero_celular, email, sexo, naturalidade, nacionalidade, fk_estado_civil, endereco_residencial, cep, fk_cliente_indicacao, fk_responsavel, grau_parentesco_responsavel, ativo) VALUES 
+(1, 'Carlos Silva', '12312312345', '123456789', '1990-05-15', '11954684815', 'carlos.silva@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua das Flores, 120', '01001000', NULL, NULL, NULL, 1),
+(2, 'Maria Oliveira', '23423423456', '234567890', '1985-08-20', '11954684815', 'maria.oliveira@email.com', 'F', 'Campinas', 'Brasileira', 2, 'Av. Paulista, 1500', '01310100', NULL, NULL, NULL, 1),
+(3, 'Lucas Santos', '34534534567', '345678901', '2000-11-10', '11954684815', 'lucas.santos@email.com', 'M', 'Santos', 'Brasileira', 1, 'Rua Augusta, 450', '01305000', NULL, NULL, NULL, 1),
+(4, 'Juliana Costa', '45645645678', '456789012', '1995-03-25', '11954684815', 'juliana.costa@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Alameda Santos, 800', '01419001', NULL, NULL, NULL, 1),
+-- Paciente 5: Menor de idade com responsável legal (Mãe = Maria Oliveira) para teste de disparo via responsável no RabbitMQ
+(5, 'Enzo Oliveira', '56756756789', '567890123', '2016-04-10', '11954684815', 'maria.oliveira@email.com', 'M', 'Campinas', 'Brasileira', 1, 'Av. Paulista, 1500', '01310100', NULL, 2, 'Mãe', 1),
+-- Paciente 6: Paciente com telefone fixo / sem 9º dígito para teste de falha de validação (FALHA_CONTATO_INVALIDO)
+(6, 'Roberto Ferreira', '67867867890', '678901234', '1978-11-03', '1133445566', 'roberto.ferreira@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua da Consolação, 900', '01301000', NULL, NULL, NULL, 1);
 
 -- 6. Convênios dos Clientes
 INSERT INTO cliente_convenio (id_cliente_convenio, fk_cliente, fk_convenio, numero_inscricao) VALUES 
 (1, 1, 1, 'PART-001'),
 (2, 2, 2, 'AMIL-987654321'),
 (3, 3, 3, 'BRAD-456789123'),
-(4, 4, 1, 'PART-004');
+(4, 4, 1, 'PART-004'),
+(5, 5, 2, 'AMIL-112233445'),
+(6, 6, 1, 'PART-006');
 
 -- 7. Fichas de Anamnese
 -- Carlos Silva (Paciente com Alergia a Penicilina, Hipertensão e Histórico Cardíaco para teste de voz na Alexa)
@@ -332,7 +338,7 @@ INSERT INTO procedimento (id_procedimento, fk_especialidade, nome_procedimento, 
 (3, 3, 'Tratamento de Canal', 1, 850.00),
 (4, 1, 'Clareamento Dental', 0, 600.00);
 
--- 9. Consultas (Utiliza CURRENT_DATE para que as consultas SEMPRE caiam na data de hoje ao rodar o script)
+-- 9. Consultas (Utiliza CURRENT_DATE e DATE_ADD para datas dinâmicas)
 INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, fk_especialidade, data, horario_inicio, horario_fim, status, lembrete_enviado, alexa_reminder_id) VALUES 
 -- Consulta 1: John Doe - Já realizada mais cedo hoje
 (1, 2, 1, 1, CURRENT_DATE, '09:00:00', '09:45:00', 'CONCLUIDA', 1, 'reminder-concluido-01'),
@@ -344,8 +350,17 @@ INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, fk_especialidade, dat
 (4, 4, 1, 1, CURRENT_DATE, '17:30:00', '18:15:00', 'AGENDADA', 0, NULL),
 -- Consulta 5: Dra. Ana Maria Souza - Atendimento hoje
 (5, 3, 2, 1, CURRENT_DATE, '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
--- Consulta 6: John Doe - Consulta agendada para amanhã
-(6, 1, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL);
+-- Consultas de Amanhã (D-1) para Teste do RabbitMQ:
+-- Consulta 6: Amanhã 10:00 - Adulto c/ celular válido (Carlos Silva) -> Elegível para enfileiramento RabbitMQ (Gera PENDENTE)
+(6, 1, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL),
+-- Consulta 7: Amanhã 11:00 - Menor de idade (Enzo Oliveira) -> Elegível RabbitMQ (Destinatário: Maria Oliveira - Mãe)
+(7, 5, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
+-- Consulta 8: Amanhã 14:00 - Paciente c/ telefone fixo (Roberto Ferreira) -> Elegível RabbitMQ (Gera FALHA_CONTATO_INVALIDO)
+(8, 6, 2, 2, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '14:00:00', '14:45:00', 'AGENDADA', 0, NULL),
+-- Consulta 9: Amanhã 15:30 - Juliana Costa -> Já pré-processada com notificação PENDENTE (testa idempotência do D-1)
+(9, 4, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '15:30:00', '16:15:00', 'AGENDADA', 0, NULL),
+-- Consulta 10: Amanhã 16:30 - Lucas Santos -> Já pré-processada com notificação DISPARADO e CONFIRMADA
+(10, 3, 2, 3, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '16:30:00', '17:15:00', 'CONFIRMADA', 0, NULL);
 
 -- 10. Catálogo de Dentes (Padrão FDI - 32 Dentes Permanentes)
 INSERT INTO dente (numero_dente, nome, arcada, quadrante) VALUES
@@ -405,3 +420,10 @@ INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUE
 (5, 'Tomografia / 3D', 'Tomografias volumétricas ou escaneamentos intraorais 3D', NULL, 1),
 (6, 'Documento / Laudo', 'Laudos periciais, termos de consentimento e exames em PDF', NULL, 1),
 (7, 'Evolução de Tratamento', 'Registros sequenciais de acompanhamento clínico', NULL, 1);
+
+-- 14. Notificações WhatsApp (Massa de Teste para o Painel da Recepção e Idempotência RabbitMQ)
+INSERT INTO notificacao_whatsapp (id_notificacao, fk_consulta, fk_cliente, fk_destinatario, nome_destinatario, grau_parentesco, numero_telefone_higienizado, status, motivo_falha, data_consulta, horario_consulta, token_confirmacao, limite_confirmacao_em, confirmado_em, criado_em, atualizado_em, disparado_em, fk_usuario_disparo) VALUES
+-- Notificação 1 (Consulta 9 - Juliana Costa): Já gerada no banco em estado PENDENTE para visualização imediata no painel da recepção
+(1, 9, 4, 4, 'Juliana Costa', NULL, '5511977665544', 'PENDENTE', NULL, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '15:30:00', 'token-seed-juliana-d1-pendente', CONCAT(DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), ' 15:30:00'), NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+-- Notificação 2 (Consulta 10 - Lucas Santos): Já disparada via WhatsApp pela recepção e com presença já confirmada pelo paciente
+(2, 10, 3, 3, 'Lucas Santos', NULL, '5511998877665', 'DISPARADO', NULL, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '16:30:00', 'token-seed-lucas-d1-confirmado', CONCAT(DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), ' 16:30:00'), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
