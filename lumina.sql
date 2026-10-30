@@ -48,6 +48,8 @@ CREATE TABLE cliente (
     fk_cliente_indicacao INT,
     fk_responsavel INT,
     grau_parentesco_responsavel VARCHAR(30),
+    consentimento_lgpd TINYINT(1) DEFAULT 1,
+    data_consentimento_lgpd DATETIME DEFAULT CURRENT_TIMESTAMP,
     ativo TINYINT(1),
 CONSTRAINT fkClienteEstadoCivil
     FOREIGN KEY (fk_estado_civil)
