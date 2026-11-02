@@ -280,7 +280,16 @@ INSERT INTO perfil (id_perfil, nome) VALUES
 INSERT INTO usuario (id_usuario, nome, email, senha, fk_perfil, cpf, cro, ativo) VALUES 
 (1, 'John Doe', 'john@doe.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '12345678901', 'SP-123456', 1),
 (2, 'Dra. Ana Maria Souza', 'ana.souza@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '98765432100', 'SP-654321', 1),
-(3, 'Administrador Lumina', 'admin@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1, '11122233344', NULL, 1);
+(3, 'Administrador Lumina', 'admin@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 1, '11122233344', NULL, 1),
+(4, 'Recepção Lumina', 'recepcao@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 3, '22233344455', NULL, 1),
+(5, 'Dr. Roberto Almeida', 'roberto.almeida@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '33344455566', 'SP-112233', 1),
+(6, 'Dra. Beatriz Ferreira', 'beatriz.ferreira@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '44455566677', 'SP-223344', 1),
+(7, 'Dr. Fernando Henrique Costa', 'fernando.costa@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '55566677788', 'SP-334455', 1),
+(8, 'Dra. Camila Rodrigues', 'camila.rodrigues@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '66677788899', 'SP-445566', 1),
+(9, 'Dr. Marcelo Ribeiro', 'marcelo.ribeiro@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '77788899900', 'SP-556677', 1),
+(10, 'Dra. Patrícia Mendes', 'patricia.mendes@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '88899900011', 'SP-667788', 1),
+(11, 'Dr. Gustavo Nascimento', 'gustavo.nascimento@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '99900011122', 'SP-778899', 1),
+(12, 'Dra. Helena Carvalho', 'helena.carvalho@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '10120230344', 'SP-889900', 0);
 
 -- 3. Estado Civil
 INSERT INTO estado_civil (id_estado_civil, descricao) VALUES 
@@ -307,6 +316,52 @@ INSERT INTO cliente (id_cliente, nome, cpf, rg, data_nascimento, numero_celular,
 -- Paciente 6: Paciente com telefone fixo / sem 9º dígito para teste de falha de validação (FALHA_CONTATO_INVALIDO)
 (6, 'Roberto Ferreira', '67867867890', '678901234', '1978-11-03', '1133445566', 'roberto.ferreira@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua da Consolação, 900', '01301000', NULL, NULL, NULL, 1);
 
+INSERT INTO cliente (id_cliente, nome, cpf, rg, data_nascimento, numero_celular, email, sexo, naturalidade, nacionalidade, fk_estado_civil, endereco_residencial, cep, ativo) VALUES
+(7, 'Adriana Pereira', '50150150101', '501234561', '1988-02-14', '11981112201', 'adriana.pereira@email.com', 'F', 'São Paulo', 'Brasileira', 2, 'Rua Oscar Freire, 210', '01426000', 1),
+(8, 'Bruno Gonçalves', '50250250202', '501234562', '1992-07-09', '11981112202', 'bruno.goncalves@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Rua Voluntários da Pátria, 900', '02010000', 1),
+(9, 'Carolina Nogueira', '50350350303', '501234563', '2001-01-30', '11981112203', 'carolina.nogueira@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Vergueiro, 2100', '04101000', 1),
+(10, 'Daniel Martins', '50450450404', '501234564', '1975-11-22', '11981112204', 'daniel.martins@email.com', 'M', 'Sorocaba', 'Brasileira', 2, 'Av. Ibirapuera, 1800', '04028001', 1),
+(11, 'Eduarda Barbosa', '50550550505', '501234565', '2016-04-18', '11981112205', 'eduarda.barbosa@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Domingos de Morais, 320', '04010000', 1),
+(12, 'Felipe Azevedo', '50650650606', '501234566', '1982-09-05', '11981112206', 'felipe.azevedo@email.com', 'M', 'Santo André', 'Brasileira', 3, 'Rua Bela Cintra, 740', '01415000', 1),
+(13, 'Gabriela Rocha', '50750750707', '501234567', '1997-12-12', '11981112207', 'gabriela.rocha@email.com', 'F', 'São Bernardo', 'Brasileira', 1, 'Rua Haddock Lobo, 510', '01414001', 1),
+(14, 'Henrique Dias', '50850850808', '501234568', '1960-06-28', '11981112208', 'henrique.dias@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Av. Brigadeiro Luís Antônio, 1200', '01318001', 1),
+(15, 'Isabela Cardoso', '50950950909', '501234569', '2018-08-03', '11981112209', 'isabela.cardoso@email.com', 'F', 'Campinas', 'Brasileira', 1, 'Rua da Consolação, 1100', '01302000', 1),
+(16, 'João Pedro Teixeira', '51051051010', '501234570', '1994-03-17', '11981112210', 'joao.teixeira@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Harmonia, 77', '05435000', 1),
+(17, 'Larissa Monteiro', '51151151111', '501234571', '1989-10-25', '11981112211', 'larissa.monteiro@email.com', 'F', 'Jundiaí', 'Brasileira', 2, 'Rua Teodoro Sampaio, 1400', '05406100', 1),
+(18, 'Matheus Moreira', '51251251212', '501234572', '1999-01-08', '11981112212', 'matheus.moreira@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Cardeal Arcoverde, 600', '05408000', 1),
+(19, 'Natália Freitas', '51351351313', '501234573', '1963-05-19', '11981112213', 'natalia.freitas@email.com', 'F', 'Santos', 'Brasileira', 4, 'Av. Rebouças, 2300', '05402300', 1),
+(20, 'Otávio Vieira', '51451451414', '501234574', '1980-12-01', '11981112214', 'otavio.vieira@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua Estados Unidos, 430', '01427000', 1),
+(21, 'Priscila Barros', '51551551515', '501234575', '1993-07-14', '11981112215', 'priscila.barros@email.com', 'F', 'Osasco', 'Brasileira', 1, 'Rua Pamplona, 890', '01405001', 1),
+(22, 'Rafael Cavalcanti', '51651651616', '501234576', '1978-04-02', '11981112216', 'rafael.cavalcanti@email.com', 'M', 'Recife', 'Brasileira', 2, 'Alameda Jaú, 350', '01420000', 1),
+(23, 'Sabrina Campos', '51751751717', '501234577', '2003-09-21', '11981112217', 'sabrina.campos@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Tutóia, 620', '04007003', 1),
+(24, 'Thiago Correia', '51851851818', '501234578', '1991-02-27', '11981112218', 'thiago.correia@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua Joaquim Floriano, 500', '04534002', 1),
+(25, 'Vanessa Araújo', '51951951919', '501234579', '1958-11-11', '11981112219', 'vanessa.araujo@email.com', 'F', 'Ribeirão Preto', 'Brasileira', 4, 'Av. Faria Lima, 3100', '01452000', 1),
+(26, 'William Pinto', '52052052020', '501234580', '1986-06-06', '11981112220', 'william.pinto@email.com', 'M', 'São Paulo', 'Brasileira', 3, 'Rua Clélia, 1050', '05042000', 1),
+(27, 'Arthur Almeida Gomes', '60010370739', '600010191', '1969-02-02', '11970011023', 'arthur.gomes.1@email.com', 'M', 'Campinas', 'Brasileira', 2, 'Av. Brasil, 107', '01430000', 1),
+(28, 'Bernardo Barbosa Lima', '60020741468', '600020382', '1970-03-03', '11970021046', 'bernardo.lima.2@email.com', 'M', 'Santos', 'Brasileira', 3, 'Rua Augusta, 114', '01305000', 1),
+(29, 'Davi Cardoso Ribeiro', '60031112197', '600030573', '1971-04-04', '11970031069', 'davi.ribeiro.3@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Alameda Santos, 121', '01419001', 1),
+(30, 'Gabriel Castro Rocha', '60041482826', '600040764', '1972-05-05', '11970041092', 'gabriel.rocha.4@email.com', 'M', 'São Paulo', 'Brasileira', 4, 'Rua Oscar Freire, 128', '01426000', 1),
+(31, 'Heitor Cunha Santos', '60051853555', '600050955', '1973-06-06', '11970051115', 'heitor.santos.5@email.com', 'M', 'Santo André', 'Brasileira', 2, 'Rua Haddock Lobo, 135', '01414001', 1),
+(32, 'Lorenzo Dias Silva', '60062224284', '600061146', '1974-07-07', '11970061138', 'lorenzo.silva.6@email.com', 'M', 'São Bernardo do Campo', 'Brasileira', 1, 'Rua Bela Cintra, 142', '01415000', 1),
+(33, 'Pedro Ferreira Sousa', '60072595113', '600071337', '1975-08-08', '11970071161', 'pedro.monteiro.7@email.com', 'M', 'Osasco', 'Brasileira', 2, 'Rua Maranhão, 149', '01240000', 1),
+(34, 'Gabriel Cruz Pereira', '60082965842', '600081528', '1976-09-09', '11970081184', 'gabriel.pereira.8@email.com', 'M', 'Ribeirão Preto', 'Brasileira', 3, 'Rua Sergipe, 156', '01243001', 1),
+(35, 'Enzo Ferreira Sampaio', '60093336571', '600091719', '1955-10-10', '11970091207', 'enzo.sampaio.9@email.com', 'M', 'São José dos Campos', 'Brasileira', 4, 'Av. Higienópolis, 163', '01238001', 1),
+(36, 'Matheus Araújo Vieira', '60103707300', '600101900', '2016-11-11', '11970101230', 'matheus.vieira.10@email.com', 'M', 'Jundiaí', 'Brasileira', 1, 'Rua Cardoso de Almeida, 170', '05013001', 1),
+(37, 'Lucas Campos Martins', '60114078039', '600112091', '1979-12-12', '11970111253', 'lucas.martins.11@email.com', 'M', 'Piracicaba', 'Brasileira', 3, 'Rua Homem de Melo, 177', '05007001', 1),
+(38, 'Benjamin Costa Nogueira', '60124448768', '600122282', '1980-01-13', '11970121276', 'benjamin.nogueira.12@email.com', 'M', 'Bauru', 'Brasileira', 1, 'Rua Apinajés, 184', '05017000', 1),
+(39, 'Nicolas Farias Reis', '60134819497', '600132473', '1981-02-14', '11970131299', 'nicolas.reis.13@email.com', 'M', 'Mogi das Cruzes', 'Brasileira', 2, 'Av. Sumaré, 191', '05016090', 1),
+(40, 'Guilherme Alves Souza', '60145180226', '600142664', '1960-03-15', '11970141322', 'guilherme.souza.14@email.com', 'M', 'Barueri', 'Brasileira', 2, 'Rua Cayowaá, 198', '05018000', 1),
+(41, 'Rafael Borges Leite', '60155550955', '600152855', '2021-04-16', '11970151345', 'rafael.leite.15@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Fradique Coutinho, 205', '05416010', 1),
+(42, 'Joaquim Coelho Monteiro', '60165921684', '600163046', '1984-05-17', '11970161368', 'joaquim.monteiro.16@email.com', 'M', 'Campinas', 'Brasileira', 2, 'Rua dos Pinheiros, 212', '05422001', 1),
+(43, 'Samuel Dias Pereira', '60176292413', '600173237', '1985-06-18', '11970171391', 'samuel.pereira.17@email.com', 'M', 'Santos', 'Brasileira', 3, 'Rua Girassol, 219', '05433001', 1),
+(44, 'Enzo Gabriel Freitas Sampaio', '60186663142', '600183428', '1986-07-19', '11970181414', 'enzo.gabriel.sampaio.18@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Rua Aspicuelta, 226', '05433010', 1),
+(45, 'João Miguel Barros Vieira', '60197033871', '600193619', '1946-08-20', '11970191437', 'joao.miguel.vieira.19@email.com', 'M', 'Sorocaba', 'Brasileira', 4, 'Av. Pedroso de Morais, 233', '05419000', 1),
+(46, 'Henrique Castro Marques', '60207404600', '600203800', '2017-09-21', '11970201460', 'henrique.marques.20@email.com', 'M', 'Santo André', 'Brasileira', 1, 'Rua Joaquim Antunes, 240', '05415010', 1),
+(47, 'Gustavo Cunha Nogueira', '60217775339', '600213991', '1989-10-22', '11970211483', 'gustavo.nogueira.21@email.com', 'M', 'São Bernardo do Campo', 'Brasileira', 1, 'Rua Mateus Grou, 247', '05415000', 1),
+(48, 'Murilo Figueiredo Reis', '60228146068', '600224182', '1990-11-23', '11970221506', 'murilo.reis.22@email.com', 'M', 'Osasco', 'Brasileira', 2, 'Rua Afonso Braz, 254', '04511011', 1),
+(49, 'Pedro Henrique Azevedo Souza', '60238516797', '600234373', '1991-12-24', '11970231529', 'pedro.henrique.souza.23@email.com', 'M', 'Ribeirão Preto', 'Brasileira', 3, 'Rua Diogo Jácome, 261', '04512001', 1),
+(50, 'Pietro Cardoso Leite', '60248887526', '600244564', '1951-01-25', '11970241552', 'pietro.leite.24@email.com', 'M', 'São José dos Campos', 'Brasileira', 2, 'Av. Santo Amaro, 268', '04506000', 1);
+
 -- 6. Convênios dos Clientes
 INSERT INTO cliente_convenio (id_cliente_convenio, fk_cliente, fk_convenio, numero_inscricao) VALUES 
 (1, 1, 1, 'PART-001'),
@@ -314,7 +369,51 @@ INSERT INTO cliente_convenio (id_cliente_convenio, fk_cliente, fk_convenio, nume
 (3, 3, 3, 'BRAD-456789123'),
 (4, 4, 1, 'PART-004'),
 (5, 5, 2, 'AMIL-112233445'),
-(6, 6, 1, 'PART-006');
+(6, 6, 1, 'PART-006'),
+(7, 7, 2, 'INSC-501501'),
+(8, 8, 1, 'INSC-502502'),
+(9, 9, 4, 'INSC-503503'),
+(10, 10, 3, 'INSC-504504'),
+(11, 11, 2, 'INSC-505505'),
+(12, 12, 1, 'INSC-506506'),
+(13, 13, 4, 'INSC-507507'),
+(14, 14, 3, 'INSC-508508'),
+(15, 15, 2, 'INSC-509509'),
+(16, 16, 1, 'INSC-510510'),
+(17, 17, 3, 'INSC-511511'),
+(18, 18, 1, 'INSC-512512'),
+(19, 19, 4, 'INSC-513513'),
+(20, 20, 2, 'INSC-514514'),
+(21, 21, 1, 'INSC-515515'),
+(22, 22, 3, 'INSC-516516'),
+(23, 23, 1, 'INSC-517517'),
+(24, 24, 2, 'INSC-518518'),
+(25, 25, 4, 'INSC-519519'),
+(26, 26, 1, 'INSC-520520'),
+(27, 27, 2, 'INSC-600103'),
+(28, 28, 3, 'INSC-600207'),
+(29, 29, 4, 'INSC-600311'),
+(30, 30, 1, 'INSC-600414'),
+(31, 31, 2, 'INSC-600518'),
+(32, 32, 3, 'INSC-600622'),
+(33, 33, 4, 'INSC-600725'),
+(34, 34, 1, 'INSC-600829'),
+(35, 35, 2, 'INSC-600933'),
+(36, 36, 3, 'INSC-601037'),
+(37, 37, 4, 'INSC-601140'),
+(38, 38, 1, 'INSC-601244'),
+(39, 39, 2, 'INSC-601348'),
+(40, 40, 3, 'INSC-601451'),
+(41, 41, 4, 'INSC-601555'),
+(42, 42, 1, 'INSC-601659'),
+(43, 43, 2, 'INSC-601762'),
+(44, 44, 3, 'INSC-601866'),
+(45, 45, 4, 'INSC-601970'),
+(46, 46, 1, 'INSC-602074'),
+(47, 47, 2, 'INSC-602177'),
+(48, 48, 3, 'INSC-602281'),
+(49, 49, 4, 'INSC-602385'),
+(50, 50, 1, 'INSC-602488');
 
 -- 7. Fichas de Anamnese
 -- Carlos Silva (Paciente com Alergia a Penicilina, Hipertensão e Histórico Cardíaco para teste de voz na Alexa)
@@ -338,41 +437,71 @@ INSERT INTO procedimento (id_procedimento, fk_especialidade, nome_procedimento, 
 (3, 3, 'Tratamento de Canal', 1, 850.00),
 (4, 1, 'Clareamento Dental', 0, 600.00);
 
--- 9. Consultas (Semana vigente e semana passada)
+-- 9. Consultas (40 consultas: 20 na semana vigente e 20 na semana passada, 5 por dia)
 INSERT INTO consulta (id_consulta, fk_cliente, fk_usuario, fk_especialidade, data, horario_inicio, horario_fim, status, lembrete_enviado, alexa_reminder_id) VALUES 
--- --- SEMANA VIGENTE ---
--- Hoje: John Doe
-(1, 2, 1, 1, CURRENT_DATE, '09:00:00', '09:45:00', 'CONCLUIDA', 1, 'reminder-concluido-01'),
--- Hoje: John Doe (Próxima consulta de hoje - Paciente Carlos Silva)
-(2, 1, 1, 1, CURRENT_DATE, '14:30:00', '15:15:00', 'AGENDADA', 0, NULL),
--- Hoje: John Doe (Tarde)
-(3, 3, 1, 3, CURRENT_DATE, '16:00:00', '16:45:00', 'AGENDADA', 0, NULL),
--- Hoje: John Doe (Fim do dia)
-(4, 4, 1, 1, CURRENT_DATE, '17:30:00', '18:15:00', 'AGENDADA', 0, NULL),
--- Hoje: Dra. Ana Maria Souza
-(5, 3, 2, 1, CURRENT_DATE, '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
--- Amanhã (D-1): Elegíveis para teste do RabbitMQ (lembrete_enviado = 0 para disparar na hora)
-(6, 1, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL),
-(7, 5, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
-(8, 6, 2, 2, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '14:00:00', '14:45:00', 'AGENDADA', 0, NULL),
-(9, 4, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '15:30:00', '16:15:00', 'AGENDADA', 0, NULL),
-(10, 3, 2, 3, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '16:30:00', '17:15:00', 'CONFIRMADA', 0, NULL),
--- Ontem: Consultas já realizadas na semana
-(11, 7, 5, 1, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'CONCLUIDA', 1, NULL),
-(12, 8, 5, 2, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
--- Daqui a 2 dias: Consultas agendadas na semana
-(13, 9, 6, 3, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '09:00:00', '09:45:00', 'AGENDADA', 0, NULL),
-(14, 10, 6, 4, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '11:00:00', '11:45:00', 'CONFIRMADA', 0, NULL),
--- --- SEMANA PASSADA ---
--- 7 dias atrás
-(15, 11, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '09:00:00', '09:45:00', 'CONCLUIDA', 1, NULL),
-(16, 12, 2, 2, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '14:30:00', '15:15:00', 'CONCLUIDA', 1, NULL),
--- 8 dias atrás
-(17, 13, 1, 3, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '10:00:00', '10:45:00', 'CONCLUIDA', 1, NULL),
-(18, 14, 5, 1, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '15:30:00', '16:15:00', 'CONCLUIDA', 1, NULL),
--- 9 dias atrás
-(19, 15, 6, 2, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '11:00:00', '11:45:00', 'CONCLUIDA', 1, NULL),
-(20, 16, 1, 4, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '16:00:00', '16:45:00', 'CANCELADA', 0, NULL);
+-- =========================================================================
+-- SEMANA VIGENTE (20 consultas - 5 por dia em 4 dias)
+-- =========================================================================
+
+-- Ontem: 5 consultas realizadas
+(1, 7, 5, 1, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '08:30:00', '09:15:00', 'CONCLUIDA', 1, NULL),
+(2, 8, 5, 2, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'CONCLUIDA', 1, NULL),
+(3, 9, 6, 1, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '11:30:00', '12:15:00', 'CONCLUIDA', 1, NULL),
+(4, 10, 6, 3, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
+(5, 11, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY), '16:00:00', '16:45:00', 'CONCLUIDA', 1, NULL),
+
+-- Hoje: 5 consultas (Atendimentos do dia para recepção, dentista e Alexa)
+(6, 2, 1, 1, CURRENT_DATE, '09:00:00', '09:45:00', 'CONCLUIDA', 1, 'reminder-concluido-01'),
+(7, 3, 2, 1, CURRENT_DATE, '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
+(8, 1, 1, 1, CURRENT_DATE, '14:30:00', '15:15:00', 'AGENDADA', 0, NULL),
+(9, 4, 1, 3, CURRENT_DATE, '16:00:00', '16:45:00', 'AGENDADA', 0, NULL),
+(10, 5, 1, 1, CURRENT_DATE, '17:30:00', '18:15:00', 'AGENDADA', 0, NULL),
+
+-- Amanhã (D-1): 5 consultas (Elegíveis para teste do RabbitMQ / Lembretes)
+(11, 1, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '10:00:00', '10:45:00', 'AGENDADA', 0, NULL),
+(12, 5, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '11:00:00', '11:45:00', 'AGENDADA', 0, NULL),
+(13, 6, 2, 2, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '14:00:00', '14:45:00', 'AGENDADA', 0, NULL),
+(14, 4, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '15:30:00', '16:15:00', 'AGENDADA', 0, NULL),
+(15, 3, 2, 3, DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY), '16:30:00', '17:15:00', 'CONFIRMADA', 0, NULL),
+
+-- Daqui a 2 dias: 5 consultas agendadas
+(16, 12, 5, 1, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '09:00:00', '09:45:00', 'CONFIRMADA', 0, NULL),
+(17, 13, 6, 2, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '10:30:00', '11:15:00', 'AGENDADA', 0, NULL),
+(18, 14, 7, 3, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '14:00:00', '14:45:00', 'CONFIRMADA', 0, NULL),
+(19, 15, 8, 4, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '15:30:00', '16:15:00', 'AGENDADA', 0, NULL),
+(20, 16, 1, 1, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), '17:00:00', '17:45:00', 'AGENDADA', 0, NULL),
+
+-- =========================================================================
+-- SEMANA PASSADA (20 consultas - 5 por dia em 4 dias)
+-- =========================================================================
+
+-- 10 dias atrás (5 consultas)
+(21, 17, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), '08:30:00', '09:15:00', 'CONCLUIDA', 1, NULL),
+(22, 18, 2, 2, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), '10:00:00', '10:45:00', 'CONCLUIDA', 1, NULL),
+(23, 19, 5, 3, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), '11:30:00', '12:15:00', 'CANCELADA', 0, NULL),
+(24, 20, 6, 1, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
+(25, 21, 7, 4, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), '16:00:00', '16:45:00', 'CONCLUIDA', 1, NULL),
+
+-- 9 dias atrás (5 consultas)
+(26, 22, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '09:00:00', '09:45:00', 'CONCLUIDA', 1, NULL),
+(27, 23, 2, 2, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '10:30:00', '11:15:00', 'CONCLUIDA', 1, NULL),
+(28, 24, 5, 3, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
+(29, 25, 6, 1, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '15:30:00', '16:15:00', 'CONCLUIDA', 1, NULL),
+(30, 26, 1, 4, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), '17:00:00', '17:45:00', 'CANCELADA', 0, NULL),
+
+-- 8 dias atrás (5 consultas)
+(31, 27, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '09:00:00', '09:45:00', 'CONCLUIDA', 1, NULL),
+(32, 28, 2, 2, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '10:30:00', '11:15:00', 'CONCLUIDA', 1, NULL),
+(33, 29, 5, 1, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
+(34, 30, 6, 3, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '15:30:00', '16:15:00', 'CONCLUIDA', 1, NULL),
+(35, 31, 7, 1, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), '17:00:00', '17:45:00', 'CONCLUIDA', 1, NULL),
+
+-- 7 dias atrás (5 consultas)
+(36, 32, 1, 1, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '09:00:00', '09:45:00', 'CONCLUIDA', 1, NULL),
+(37, 33, 2, 2, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '10:30:00', '11:15:00', 'CONCLUIDA', 1, NULL),
+(38, 34, 5, 3, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '14:00:00', '14:45:00', 'CONCLUIDA', 1, NULL),
+(39, 35, 6, 1, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '15:30:00', '16:15:00', 'CONCLUIDA', 1, NULL),
+(40, 36, 1, 4, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '17:00:00', '17:45:00', 'CONCLUIDA', 1, NULL);
 
 -- 10. Catálogo de Dentes (Padrão FDI - 32 Dentes Permanentes)
 INSERT INTO dente (numero_dente, nome, arcada, quadrante) VALUES
@@ -432,113 +561,4 @@ INSERT INTO tipo_midia (id_tipo_midia, nome, descricao, fk_usuario, ativo) VALUE
 (5, 'Tomografia / 3D', 'Tomografias volumétricas ou escaneamentos intraorais 3D', NULL, 1),
 (6, 'Documento / Laudo', 'Laudos periciais, termos de consentimento e exames em PDF', NULL, 1),
 (7, 'Evolução de Tratamento', 'Registros sequenciais de acompanhamento clínico', NULL, 1);
-
--- =============================================================================
--- 15. MASSA EXPANDIDA PARA DASHBOARD E AGENDA (USUÁRIOS, PACIENTES E CONSULTAS)
--- =============================================================================
-
--- 15.1 Usuários adicionais (Recepcionista e Dentistas)
-INSERT IGNORE INTO usuario (id_usuario, nome, email, senha, fk_perfil, cpf, cro, ativo) VALUES
-(4, 'Recepção Lumina', 'recepcao@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 3, '22233344455', NULL, 1),
-(5, 'Dr. Roberto Almeida', 'roberto.almeida@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '33344455566', 'SP-112233', 1),
-(6, 'Dra. Beatriz Ferreira', 'beatriz.ferreira@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '44455566677', 'SP-223344', 1),
-(7, 'Dr. Fernando Henrique Costa', 'fernando.costa@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '55566677788', 'SP-334455', 1),
-(8, 'Dra. Camila Rodrigues', 'camila.rodrigues@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '66677788899', 'SP-445566', 1),
-(9, 'Dr. Marcelo Ribeiro', 'marcelo.ribeiro@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '77788899900', 'SP-556677', 1),
-(10, 'Dra. Patrícia Mendes', 'patricia.mendes@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '88899900011', 'SP-667788', 1),
-(11, 'Dr. Gustavo Nascimento', 'gustavo.nascimento@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '99900011122', 'SP-778899', 1),
-(12, 'Dra. Helena Carvalho', 'helena.carvalho@lumina.com', '$2a$10$0/TKTGxdREbWaWjWYhwf6e9P1fPOAMMNqEnZgOG95jnSkHSfkkIrC', 2, '10120230344', 'SP-889900', 0);
-
--- 15.2 Pacientes adicionais (IDs 7..66)
-INSERT IGNORE INTO cliente (id_cliente, nome, cpf, rg, data_nascimento, numero_celular, email, sexo, naturalidade, nacionalidade, fk_estado_civil, endereco_residencial, cep, ativo) VALUES
-(7, 'Adriana Pereira', '50150150101', '501234561', '1988-02-14', '11981112201', 'adriana.pereira@email.com', 'F', 'São Paulo', 'Brasileira', 2, 'Rua Oscar Freire, 210', '01426000', 1),
-(8, 'Bruno Gonçalves', '50250250202', '501234562', '1992-07-09', '11981112202', 'bruno.goncalves@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Rua Voluntários da Pátria, 900', '02010000', 1),
-(9, 'Carolina Nogueira', '50350350303', '501234563', '2001-01-30', '11981112203', 'carolina.nogueira@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Vergueiro, 2100', '04101000', 1),
-(10, 'Daniel Martins', '50450450404', '501234564', '1975-11-22', '11981112204', 'daniel.martins@email.com', 'M', 'Sorocaba', 'Brasileira', 2, 'Av. Ibirapuera, 1800', '04028001', 1),
-(11, 'Eduarda Barbosa', '50550550505', '501234565', '2016-04-18', '11981112205', 'eduarda.barbosa@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Domingos de Morais, 320', '04010000', 1),
-(12, 'Felipe Azevedo', '50650650606', '501234566', '1982-09-05', '11981112206', 'felipe.azevedo@email.com', 'M', 'Santo André', 'Brasileira', 3, 'Rua Bela Cintra, 740', '01415000', 1),
-(13, 'Gabriela Rocha', '50750750707', '501234567', '1997-12-12', '11981112207', 'gabriela.rocha@email.com', 'F', 'São Bernardo', 'Brasileira', 1, 'Rua Haddock Lobo, 510', '01414001', 1),
-(14, 'Henrique Dias', '50850850808', '501234568', '1960-06-28', '11981112208', 'henrique.dias@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Av. Brigadeiro Luís Antônio, 1200', '01318001', 1),
-(15, 'Isabela Cardoso', '50950950909', '501234569', '2018-08-03', '11981112209', 'isabela.cardoso@email.com', 'F', 'Campinas', 'Brasileira', 1, 'Rua da Consolação, 1100', '01302000', 1),
-(16, 'João Pedro Teixeira', '51051051010', '501234570', '1994-03-17', '11981112210', 'joao.teixeira@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Harmonia, 77', '05435000', 1),
-(17, 'Larissa Monteiro', '51151151111', '501234571', '1989-10-25', '11981112211', 'larissa.monteiro@email.com', 'F', 'Jundiaí', 'Brasileira', 2, 'Rua Teodoro Sampaio, 1400', '05406100', 1),
-(18, 'Matheus Moreira', '51251251212', '501234572', '1999-01-08', '11981112212', 'matheus.moreira@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Cardeal Arcoverde, 600', '05408000', 1),
-(19, 'Natália Freitas', '51351351313', '501234573', '1963-05-19', '11981112213', 'natalia.freitas@email.com', 'F', 'Santos', 'Brasileira', 4, 'Av. Rebouças, 2300', '05402300', 1),
-(20, 'Otávio Vieira', '51451451414', '501234574', '1980-12-01', '11981112214', 'otavio.vieira@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua Estados Unidos, 430', '01427000', 1),
-(21, 'Priscila Barros', '51551551515', '501234575', '1993-07-14', '11981112215', 'priscila.barros@email.com', 'F', 'Osasco', 'Brasileira', 1, 'Rua Pamplona, 890', '01405001', 1),
-(22, 'Rafael Cavalcanti', '51651651616', '501234576', '1978-04-02', '11981112216', 'rafael.cavalcanti@email.com', 'M', 'Recife', 'Brasileira', 2, 'Alameda Jaú, 350', '01420000', 1),
-(23, 'Sabrina Campos', '51751751717', '501234577', '2003-09-21', '11981112217', 'sabrina.campos@email.com', 'F', 'São Paulo', 'Brasileira', 1, 'Rua Tutóia, 620', '04007003', 1),
-(24, 'Thiago Correia', '51851851818', '501234578', '1991-02-27', '11981112218', 'thiago.correia@email.com', 'M', 'São Paulo', 'Brasileira', 2, 'Rua Joaquim Floriano, 500', '04534002', 1),
-(25, 'Vanessa Araújo', '51951951919', '501234579', '1958-11-11', '11981112219', 'vanessa.araujo@email.com', 'F', 'Ribeirão Preto', 'Brasileira', 4, 'Av. Faria Lima, 3100', '01452000', 1),
-(26, 'William Pinto', '52052052020', '501234580', '1986-06-06', '11981112220', 'william.pinto@email.com', 'M', 'São Paulo', 'Brasileira', 3, 'Rua Clélia, 1050', '05042000', 1),
-(27, 'Arthur Almeida Gomes', '60010370739', '600010191', '1969-02-02', '11970011023', 'arthur.gomes.1@email.com', 'M', 'Campinas', 'Brasileira', 2, 'Av. Brasil, 107', '01430000', 1),
-(28, 'Heitor Batista Martins', '60020741468', '600020382', '1970-03-03', '11970021046', 'heitor.martins.2@email.com', 'M', 'Santos', 'Brasileira', 3, 'Rua Frei Caneca, 114', '01307001', 1),
-(29, 'Bernardo Cavalcanti Nogueira', '60031112197', '600030573', '1971-04-04', '11970031069', 'bernardo.nogueira.3@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Rua Augusta, 121', '01305100', 1),
-(30, 'Davi Dantas Reis', '60041482926', '600040764', '1950-05-05', '11970041092', 'davi.reis.4@email.com', 'M', 'Sorocaba', 'Brasileira', 2, 'Alameda Itu, 128', '01421000', 1),
-(31, 'Lorenzo Fonseca Souza', '60051853655', '600050955', '2020-06-06', '11970051115', 'lorenzo.souza.5@email.com', 'M', 'Santo André', 'Brasileira', 1, 'Rua Peixoto Gomide, 135', '01409001', 1),
-(32, 'Théo Barbosa Leite', '60062224384', '600061146', '1974-07-07', '11970061138', 'theo.leite.6@email.com', 'M', 'São Bernardo do Campo', 'Brasileira', 1, 'Av. Angélica, 142', '01227200', 1),
-(33, 'Pedro Carvalho Monteiro', '60072595113', '600071337', '1975-08-08', '11970071161', 'pedro.monteiro.7@email.com', 'M', 'Osasco', 'Brasileira', 2, 'Rua Maranhão, 149', '01240000', 1),
-(34, 'Gabriel Cruz Pereira', '60082965842', '600081528', '1976-09-09', '11970081184', 'gabriel.pereira.8@email.com', 'M', 'Ribeirão Preto', 'Brasileira', 3, 'Rua Sergipe, 156', '01243001', 1),
-(35, 'Enzo Ferreira Sampaio', '60093336571', '600091719', '1955-10-10', '11970091207', 'enzo.sampaio.9@email.com', 'M', 'São José dos Campos', 'Brasileira', 4, 'Av. Higienópolis, 163', '01238001', 1),
-(36, 'Matheus Araújo Vieira', '60103707300', '600101900', '2016-11-11', '11970101230', 'matheus.vieira.10@email.com', 'M', 'Jundiaí', 'Brasileira', 1, 'Rua Cardoso de Almeida, 170', '05013001', 1),
-(37, 'Lucas Campos Martins', '60114078039', '600112091', '1979-12-12', '11970111253', 'lucas.martins.11@email.com', 'M', 'Piracicaba', 'Brasileira', 3, 'Rua Homem de Melo, 177', '05007001', 1),
-(38, 'Benjamin Costa Nogueira', '60124448768', '600122282', '1980-01-13', '11970121276', 'benjamin.nogueira.12@email.com', 'M', 'Bauru', 'Brasileira', 1, 'Rua Apinajés, 184', '05017000', 1),
-(39, 'Nicolas Farias Reis', '60134819497', '600132473', '1981-02-14', '11970131299', 'nicolas.reis.13@email.com', 'M', 'Mogi das Cruzes', 'Brasileira', 2, 'Av. Sumaré, 191', '05016090', 1),
-(40, 'Guilherme Alves Souza', '60145180226', '600142664', '1960-03-15', '11970141322', 'guilherme.souza.14@email.com', 'M', 'Barueri', 'Brasileira', 2, 'Rua Cayowaá, 198', '05018000', 1),
-(41, 'Rafael Borges Leite', '60155550955', '600152855', '2021-04-16', '11970151345', 'rafael.leite.15@email.com', 'M', 'São Paulo', 'Brasileira', 1, 'Rua Fradique Coutinho, 205', '05416010', 1),
-(42, 'Joaquim Coelho Monteiro', '60165921684', '600163046', '1984-05-17', '11970161368', 'joaquim.monteiro.16@email.com', 'M', 'Campinas', 'Brasileira', 2, 'Rua dos Pinheiros, 212', '05422001', 1),
-(43, 'Samuel Dias Pereira', '60176292413', '600173237', '1985-06-18', '11970171391', 'samuel.pereira.17@email.com', 'M', 'Santos', 'Brasileira', 3, 'Rua Girassol, 219', '05433001', 1),
-(44, 'Enzo Gabriel Freitas Sampaio', '60186663142', '600183428', '1986-07-19', '11970181414', 'enzo.gabriel.sampaio.18@email.com', 'M', 'Guarulhos', 'Brasileira', 1, 'Rua Aspicuelta, 226', '05433010', 1),
-(45, 'João Miguel Barros Vieira', '60197033871', '600193619', '1946-08-20', '11970191437', 'joao.miguel.vieira.19@email.com', 'M', 'Sorocaba', 'Brasileira', 4, 'Av. Pedroso de Morais, 233', '05419000', 1),
-(46, 'Henrique Castro Marques', '60207404600', '600203800', '2017-09-21', '11970201460', 'henrique.marques.20@email.com', 'M', 'Santo André', 'Brasileira', 1, 'Rua Joaquim Antunes, 240', '05415010', 1),
-(47, 'Gustavo Cunha Nogueira', '60217775339', '600213991', '1989-10-22', '11970211483', 'gustavo.nogueira.21@email.com', 'M', 'São Bernardo do Campo', 'Brasileira', 1, 'Rua Mateus Grou, 247', '05415000', 1),
-(48, 'Murilo Figueiredo Reis', '60228146068', '600224182', '1990-11-23', '11970221506', 'murilo.reis.22@email.com', 'M', 'Osasco', 'Brasileira', 2, 'Rua Afonso Braz, 254', '04511011', 1),
-(49, 'Pedro Henrique Azevedo Souza', '60238516797', '600234373', '1991-12-24', '11970231529', 'pedro.henrique.souza.23@email.com', 'M', 'Ribeirão Preto', 'Brasileira', 3, 'Rua Diogo Jácome, 261', '04512001', 1),
-(50, 'Pietro Cardoso Leite', '60248887526', '600244564', '1951-01-25', '11970241552', 'pietro.leite.24@email.com', 'M', 'São José dos Campos', 'Brasileira', 2, 'Av. Santo Amaro, 268', '04506000', 1);
-
-INSERT IGNORE INTO cliente_convenio (id_cliente_convenio, fk_cliente, fk_convenio, numero_inscricao) VALUES
-(7, 7, 2, 'INSC-501501'),
-(8, 8, 1, 'INSC-502502'),
-(9, 9, 4, 'INSC-503503'),
-(10, 10, 3, 'INSC-504504'),
-(11, 11, 2, 'INSC-505505'),
-(12, 12, 1, 'INSC-506506'),
-(13, 13, 4, 'INSC-507507'),
-(14, 14, 3, 'INSC-508508'),
-(15, 15, 2, 'INSC-509509'),
-(16, 16, 1, 'INSC-510510'),
-(17, 17, 3, 'INSC-511511'),
-(18, 18, 1, 'INSC-512512'),
-(19, 19, 4, 'INSC-513513'),
-(20, 20, 2, 'INSC-514514'),
-(21, 21, 1, 'INSC-515515'),
-(22, 22, 3, 'INSC-516516'),
-(23, 23, 1, 'INSC-517517'),
-(24, 24, 2, 'INSC-518518'),
-(25, 25, 4, 'INSC-519519'),
-(26, 26, 1, 'INSC-520520'),
-(27, 27, 2, 'INSC-600103'),
-(28, 28, 3, 'INSC-600207'),
-(29, 29, 4, 'INSC-600311'),
-(30, 30, 1, 'INSC-600414'),
-(31, 31, 2, 'INSC-600518'),
-(32, 32, 3, 'INSC-600622'),
-(33, 33, 4, 'INSC-600725'),
-(34, 34, 1, 'INSC-600829'),
-(35, 35, 2, 'INSC-600933'),
-(36, 36, 3, 'INSC-601037'),
-(37, 37, 4, 'INSC-601140'),
-(38, 38, 1, 'INSC-601244'),
-(39, 39, 2, 'INSC-601348'),
-(40, 40, 3, 'INSC-601451'),
-(41, 41, 4, 'INSC-601555'),
-(42, 42, 1, 'INSC-601659'),
-(43, 43, 2, 'INSC-601762'),
-(44, 44, 3, 'INSC-601866'),
-(45, 45, 4, 'INSC-601970'),
-(46, 46, 1, 'INSC-602074'),
-(47, 47, 2, 'INSC-602177'),
-(48, 48, 3, 'INSC-602281'),
-(49, 49, 4, 'INSC-602385'),
-(50, 50, 1, 'INSC-602488');
 
